@@ -18,6 +18,7 @@ import loginImage from "../../../../public/login.jpg";
 import RMImage from "../recipe-manager-image/RMImage";
 import { useForm } from "react-hook-form";
 import { notifyError, notifySuccess } from "../../../utils/toast";
+import { setCookie } from "cookies-next";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -61,14 +62,20 @@ const Login = () => {
         "https://api.circlescrm.net/api/login",
         data2,
         {
+          withCredentials: true,
           headers: {
-            "access-control-allow-origin": "*",
-            "Content-type": "application/json; charset=UTF-8",
-          },
+              'Access-Control-Allow-Origin': '*', 
+              'Content-Type': 'application/json'
+          }
         }
+      
       );
       if (response?.data?.user) {
-        notifySuccess("Successfully Signup");
+        notifySuccess("Successfully LoggedIn");
+        setCookie(
+          "userInfo",
+          response?.data?.user
+        );
         router.push("/");
       } else if (response?.data?.errors) {
         notifyError(response?.data?.message);

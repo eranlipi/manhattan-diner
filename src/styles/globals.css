@@ -105,3 +105,10 @@ a {
     color-scheme: dark;
   }
 } */
+
+.fontSize14{
+  font-size: 14px;
+}
+.editIcon {
+  color: '#3f51b5',
+}
