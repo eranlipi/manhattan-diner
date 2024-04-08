@@ -22,6 +22,17 @@ import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
 import { useRouter } from "next/router";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Tooltip } from "@mui/material";
+import Button from '@mui/material/Button';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { deleteCookie } from "cookies-next";
+import { notifySuccess } from "../../utils/toast";
 
 function Copyright(props) {
   return (
@@ -91,21 +102,34 @@ const Drawer = styled(MuiDrawer, {
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpenModal(true);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
   const router = useRouter();
-  console.log("router.pathname", router);
 
+  const deleteCookies = ()=>{
+    deleteCookie("userInfo");
+    notifySuccess("Successfully Logout");
+    router.push("/login")
+  }
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex"  }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", // keep right padding when drawer closed
+              pr: "24px", 
             }}
           >
             <IconButton
@@ -127,14 +151,18 @@ export default function Dashboard() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              {router.pathname.split("/")[1].charAt(0).toUpperCase() +
+              {router?.pathname === "/" ? "Dashboard" : router.pathname.split("/")[1].charAt(0).toUpperCase() +
                 router.pathname.split("/")[1].slice(1)}
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+            <Tooltip title="Logout">
+
+            <IconButton color="inherit" onClick={()=>setOpenModal(true)}>
+            
+                <LogoutIcon />
+            
             </IconButton>
+            </Tooltip>
+
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -157,6 +185,9 @@ export default function Dashboard() {
             {secondaryListItems} */}
           </List>
         </Drawer>
+        {
+          (router.pathname.split("/")[1]    === "dashboard" || router?.pathname === "/") && (
+
         <Box
           component="main"
           sx={{
@@ -170,7 +201,6 @@ export default function Dashboard() {
           }}
         >
           <Toolbar />
-          {router.pathname === "dashboard" && (
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* Chart */}
@@ -210,9 +240,36 @@ export default function Dashboard() {
               </Grid>
               <Copyright sx={{ pt: 4 }} />
             </Container>
-          )}
+          
         </Box>
+          )
+        }
       </Box>
+      <React.Fragment>
+  
+      <Dialog
+        open={openModal}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are You Sure you want to logout?"}
+        </DialogTitle>
+        {/* <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Let Google help apps determine location. This means sending anonymous
+            location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent> */}
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button  autoFocus variant="contained" onClick={deleteCookies}>
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
     </ThemeProvider>
   );
 }
