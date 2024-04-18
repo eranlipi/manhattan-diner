@@ -19,11 +19,10 @@ use App\Http\Controllers\InvoiceController;
 |
 */
 
-
 // Route::post('/register', [UserController::class, 'register']);
-Route::middleware('web')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-});
+Route::post('/login', [AuthController::class, 'login']);
+
+
 
 
 Route::middleware('auth:sanctum')->group(function () {

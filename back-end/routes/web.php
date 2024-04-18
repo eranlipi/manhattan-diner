@@ -23,9 +23,10 @@ use App\Http\Controllers\RevenueController;
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
-Route::get('/sanctum/csrf-cookie', function () {
-    return response()->json(['message' => 'CSRF cookie set']);
-})->middleware('web');
+
+Route::get('/csrf-cookie', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
 
 // Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 // Route::post('/login', [AuthController::class, 'login']);
