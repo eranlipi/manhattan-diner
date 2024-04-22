@@ -8,6 +8,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\InventoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,9 +20,9 @@ use App\Http\Controllers\InvoiceController;
 |
 */
 
-// Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
 
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
 
 
@@ -39,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/invoices', [InvoiceController::class, 'store']);
     Route::get('/invoices/{year}/{month}', [InvoiceController::class, 'getInvoicesByMonthAndYear']);
     Route::get('/invoices/{year}', [InvoiceController::class, 'getInvoicesByYear']);
+     Route::get('/invoices/{id}', [InvoiceController::class, 'getInvoicesById']);
     Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']);
 
     // barcode
@@ -48,9 +50,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/inventory/update', [InventoryController::class, 'updateInventory']);
     Route::apiResource('expenses', ExpenseController::class);
 
+    // producs
+    Route::post('/product/{id}', [InventoryController::class, 'update']);
+    Route::post('/product', [InventoryController::class, 'store']);
+    Route::get('/products', [InventoryController::class, 'index']);
+    Route::get('/product/{id}', [InventoryController::class, 'show']);
+    Route::delete('/product/{id}', [InventoryController::class, 'destroy']);
+   
     // inventory
     Route::get('/inventory', [InventoryController::class, 'index']);
     Route::post('/inventory', [InventoryController::class, 'store']);
+ 
     Route::delete('/inventory/{id}', [InventoryController::class, 'destroy']);
 
 
