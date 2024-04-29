@@ -7,9 +7,8 @@ import CommonTable from "./components/commonHeaderInfo/commonTable/CommonTable";
 const Expenses = () => {
   return (
     <Box sx={{display:"flex"}}>
-
     <Dashboard />
-    <Box sx={{ width:"100%" , height:"100%" , margin:5 , marginTop:10}}>
+    <Box sx={{ width:"100%" , height:"100%" ,margin:{xs: 0 , sm:5}  , marginTop:{xs:8}}}>
      <CommonHeader heading={"Expenses"} subHeading={"A list of all users in your account including your email , role , title and name"} buttonText ={"Add expenses"} />
      <CommonTable />
     </Box>
@@ -18,3 +17,14 @@ const Expenses = () => {
 };
 
 export default Expenses;
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      // You can get the messages from anywhere you like. The recommended
+      // pattern is to put them in JSON files separated by locale and read
+      // the desired one based on the `locale` received from Next.js.
+      messages: (await import(`../../messages/${context.locale}.json`)).default
+    }
+  };
+}

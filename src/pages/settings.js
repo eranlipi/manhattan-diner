@@ -16,9 +16,11 @@ import Dashboard from "./components/Dashboard";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 const Settings = () => {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("header")
 
   const userInfoString = getCookie("userInfo");
 
@@ -33,11 +35,11 @@ const Settings = () => {
     oldPassword: yup
       .string()
       .label("oldPassword")
-      .required("Old Password Is required"),
+      .required(t("Old Password Is required")),
     newPassword: yup
       .string()
       .label("newPassword")
-      .required("New Password is required"),
+      .required(t("New Password is required")),
   });
 
   const {
@@ -94,7 +96,7 @@ const Settings = () => {
             }}
           >
             <Typography variant="h6" sx={{ width: "50%" }}>
-              Name
+              {t("Name")}
             </Typography>
             <Typography variant="subtitle2" sx={{ width: "50%" }}>
               {userInfo?.name}
@@ -109,7 +111,7 @@ const Settings = () => {
             }}
           >
             <Typography variant="h6" sx={{ width: "50%" }}>
-              Email
+              {t("Email")}
             </Typography>
             <Typography variant="subtitle2" sx={{ width: "50%" }}>
               {userInfo?.email}
@@ -118,7 +120,7 @@ const Settings = () => {
 
           <Box sx={{ textAlign: "center" }} mt={5}>
             <Button variant="contained" onClick={() => setOpen(true)}>
-              Change Password
+              {t("Change Password")}
             </Button>
           </Box>
         </Box>
@@ -128,13 +130,12 @@ const Settings = () => {
         onClose={handleClose}
       
       >
-        <DialogTitle>Update Password</DialogTitle>
+        <DialogTitle>{t("Update Password")}</DialogTitle>
 
         <form onSubmit={handleSubmit(onSubmit)} style={{textAlign:"-webkit-center"}}>
           <DialogContent>
             <DialogContentText>
-              Enter your old, new password and Click Update to change your
-              password
+              {t("EnterOldPassword")}
             </DialogContentText>
           </DialogContent>
 
@@ -148,7 +149,7 @@ const Settings = () => {
                 // type="password"
                 margin="normal"
                 fullWidth
-                label="Old Password"
+                label={t("Old Password")}
                 // autoComplete="current-password"
                 onChangeCapture={(e) => {
                   const trimmedValue = e.currentTarget.value
@@ -175,7 +176,7 @@ const Settings = () => {
                 // type="password"
                 margin="normal"
                 fullWidth
-                label="New Password"
+                label={t("New Password")}
                 // autoComplete="current-password"
                 onChangeCapture={(e) => {
                   const trimmedValue = e.currentTarget.value
@@ -202,14 +203,14 @@ const Settings = () => {
                 onKeyDown={(e) => onSubmit(getValues, e)}
                 disabled={Object.keys(errors).length > 0 ? true : false}
               >
-                Update Password
+                {t("Update Password")}
               </Button>
               <Button
                 onClick={handleClose}
                 variant="contained"
                 sx={{ width: "100%" , mb:1 }}
               >
-                Cancel
+                {t("Cancel")}
               </Button>
             </Box>
         
@@ -220,3 +221,15 @@ const Settings = () => {
 };
 
 export default Settings;
+
+
+export async function getStaticProps(context) {
+  return {
+    props: {
+      // You can get the messages from anywhere you like. The recommended
+      // pattern is to put them in JSON files separated by locale and read
+      // the desired one based on the `locale` received from Next.js.
+      messages: (await import(`../../messages/${context.locale}.json`)).default
+    }
+  };
+}

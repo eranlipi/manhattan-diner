@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { useTranslations } from "next-intl";
 
 //styles
 
@@ -25,6 +26,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const CommonTable = ({ headings, tableData }) => {
+  const t = useTranslations("header")
   // dummy data
   const rows = [
     {
@@ -75,7 +77,7 @@ const CommonTable = ({ headings, tableData }) => {
                 isHeader={true}
                 sx={{ fontWeight: "bold" }}
               >
-                {header}
+                {t(header)}
               </StyledTableCell>
             ))}
           </TableRow>

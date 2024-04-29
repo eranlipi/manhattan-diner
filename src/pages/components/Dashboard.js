@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
+
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -13,26 +15,90 @@ import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
+// import Link from "@mui/material/Link";
+import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems, secondaryListItems } from "./listItems";
+import { mainListItems } from "./listItems";
+import mainListItemsComponent from "./listItems";
+
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
 import { useRouter } from "next/router";
-import LogoutIcon from '@mui/icons-material/Logout';
-import { Tooltip } from "@mui/material";
-import Button from '@mui/material/Button';
+import LogoutIcon from "@mui/icons-material/Logout";
+import {
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Select,
+  Tooltip,
+  useMediaQuery,
+} from "@mui/material";
+import Button from "@mui/material/Button";
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { deleteCookie } from "cookies-next";
 import { notifySuccess } from "../../utils/toast";
+
+import { useTranslations } from "next-intl";
+
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import GroupIcon from "@mui/icons-material/Group";
+import PaymentIcon from "@mui/icons-material/Payment";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
+import SettingsIcon from "@mui/icons-material/Settings";
+const pagesArray = [
+  {
+    name: "Dashboard",
+    link: "/dashboard",
+    icon: <DashboardIcon />,
+  },
+  {
+    name: "Users",
+    link: "/users",
+    icon: <GroupIcon />,
+  },
+  {
+    name: "Expenses",
+    link: "/expenses",
+    icon: <PaymentIcon />,
+  },
+  {
+    name: "Revenues",
+    link: "/revenues",
+    icon: <MonetizationOnIcon />,
+  },
+  {
+    name: "Invoices",
+    link: "/invoices",
+    icon: <ReceiptIcon />,
+  },
+  {
+    name: "Inventory",
+    link: "/inventory",
+    icon: <InventoryIcon />,
+  },
+  {
+    name: "Barcodes",
+    link: "/barcodes",
+    icon: <QrCode2Icon />,
+  },
+  {
+    name: "Settings",
+    link: "/settings",
+    icon: <SettingsIcon />,
+  },
+];
 
 function Copyright(props) {
   return (
@@ -49,6 +115,76 @@ function Copyright(props) {
       {new Date().getFullYear()}
       {"."}
     </Typography>
+  );
+}
+
+function Language({ active, handleLanguageActive }) {
+  const t = useTranslations("header");
+  const route = useRouter();
+  return (
+    <>
+      <span
+        onClick={() => handleLanguageActive("lang")}
+        className="bg-dark px-4 py-2 text-white offcanvas__lang-selected-lang tp-lang-toggle"
+        id="tp-offcanvas-lang-toggle"
+      >
+        {route.locale == "ar" ? "عربي" : "English"}
+      </span>
+
+      <Select
+        // value={age}
+        label="Language"
+        // onChange={handleChange}
+        sx={{
+          marginLeft: 1,
+          marginRight: 1,
+          width: 50,
+        }}
+      >
+        <MenuItem style={{ backgroundColor: "transparent" }}>
+          {route.locale == "ar" ? (
+            <li>
+              <a
+                rel="noopener noreferrer"
+                href={`/en${route.asPath}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                English
+              </a>
+            </li>
+          ) : (
+            <li>
+              <a
+                rel="noopener noreferrer"
+                href={`/ar${route.asPath}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                Arabic
+              </a>
+            </li>
+          )}
+        </MenuItem>
+      </Select>
+      {/* <ul
+        className={`offcanvas__lang-list tp-lang-list py-2 ${
+          active === "lang" ? "tp-lang-list-open" : ""
+        }`}
+      >
+        {route.locale == "ar" ? (
+          <li>
+            <a rel="noopener noreferrer" href={`/en${route.asPath}`}>
+              English
+            </a>
+          </li>
+        ) : (
+          <li>
+            <a rel="noopener noreferrer" href={`/ar${route.asPath}`}>
+              Arabic
+            </a>
+          </li>
+        )}
+      </ul> */}
+    </>
   );
 }
 
@@ -103,6 +239,16 @@ const defaultTheme = createTheme();
 
 export default function Dashboard() {
   const [openModal, setOpenModal] = React.useState(false);
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const [active, setIsActive] = useState("");
+
+  const t = useTranslations("header");
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpen(false);
+    }
+  }, [isMobile]);
 
   const handleClickOpen = () => {
     setOpenModal(true);
@@ -117,19 +263,27 @@ export default function Dashboard() {
   };
   const router = useRouter();
 
-  const deleteCookies = ()=>{
+  const deleteCookies = () => {
     deleteCookie("userInfo");
     notifySuccess("Successfully Logout");
-    router.push("/login")
-  }
+    router.push("/login");
+  };
+
+  const handleLanguageActive = (type) => {
+    if (type === active) {
+      setIsActive("");
+    } else {
+      setIsActive(type);
+    }
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex"  }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", 
+              pr: "24px",
             }}
           >
             <IconButton
@@ -151,18 +305,27 @@ export default function Dashboard() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              {router?.pathname === "/" ? "Dashboard" : router.pathname.split("/")[1].charAt(0).toUpperCase() +
-                router.pathname.split("/")[1].slice(1)}
+              {router?.pathname === "/" ? (
+                <span> {t("Dashboard")}</span>
+              ) : (
+                t(
+                  router.pathname.split("/")[1].charAt(0).toUpperCase() +
+                    router.pathname.split("/")[1].slice(1)
+                )
+              )}
             </Typography>
+
+            <div className="offcanvas__lang-wrapper">
+              <Language
+                active={active}
+                handleLanguageActive={handleLanguageActive}
+              />
+            </div>
             <Tooltip title="Logout">
-
-            <IconButton color="inherit" onClick={()=>setOpenModal(true)}>
-            
+              <IconButton color="inherit" onClick={() => setOpenModal(true)}>
                 <LogoutIcon />
-            
-            </IconButton>
+              </IconButton>
             </Tooltip>
-
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -180,27 +343,49 @@ export default function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            {/* {mainListItems} */}
+            {/* <mainListItemsComponent /> */}
             {/* <Divider sx={{ my: 1 }} />
             {secondaryListItems} */}
+            {pagesArray?.map((item, index) => {
+              return (
+                <ListItemButton key={item?.name + index}>
+                  <Link
+                    href={item.link}
+                    style={{
+                      display: "flex",
+                      textDecoration: "none",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ListItemIcon>{item?.icon}</ListItemIcon>
+                    <ListItemText
+                      primary={t(item?.name)}
+                      sx={{
+                        color: "black",
+                      }}
+                    />
+                  </Link>
+                </ListItemButton>
+              );
+            })}
           </List>
         </Drawer>
-        {
-          (router.pathname.split("/")[1]    === "dashboard" || router?.pathname === "/") && (
-
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
+        {(router.pathname.split("/")[1] === "dashboard" ||
+          router?.pathname === "/") && (
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* Chart */}
@@ -217,7 +402,7 @@ export default function Dashboard() {
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
+                {/* <Grid item xs={12} md={4} lg={3}>
                   <Paper
                     sx={{
                       p: 2,
@@ -228,48 +413,45 @@ export default function Dashboard() {
                   >
                     <Deposits />
                   </Paper>
-                </Grid>
+                </Grid> */}
                 {/* Recent Orders */}
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     <Orders />
                   </Paper>
-                </Grid>
+                </Grid> */}
               </Grid>
-              <Copyright sx={{ pt: 4 }} />
+              {/* <Copyright sx={{ pt: 4 }} /> */}
             </Container>
-          
-        </Box>
-          )
-        }
+          </Box>
+        )}
       </Box>
       <React.Fragment>
-  
-      <Dialog
-        open={openModal}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Are You Sure you want to logout?"}
-        </DialogTitle>
-        {/* <DialogContent>
+        <Dialog
+          open={openModal}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are You Sure you want to logout?"}
+          </DialogTitle>
+          {/* <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Let Google help apps determine location. This means sending anonymous
             location data to Google, even when no apps are running.
           </DialogContentText>
         </DialogContent> */}
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button  autoFocus variant="contained" onClick={deleteCookies}>
-            Logout
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button autoFocus variant="contained" onClick={deleteCookies}>
+              Logout
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
     </ThemeProvider>
   );
 }

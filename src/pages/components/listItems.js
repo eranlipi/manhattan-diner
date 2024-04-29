@@ -17,6 +17,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Link from "next/link";
+import { useTranslations } from "use-intl";
 const pagesArray = [
   {
     name: "Dashboard",
@@ -60,6 +61,36 @@ const pagesArray = [
   },
 ];
 
+ const  mainListItemsComponent = () =>{
+  const t = useTranslations("header")
+  return  (
+    <>
+    {pagesArray?.map((item, index) => {
+      return (
+        <ListItemButton key={item?.name + index}>
+          <Link
+            href={item.link}
+            style={{
+              display: "flex",
+              textDecoration: "none",
+              alignItems: "center",
+            }}
+          >
+            <ListItemIcon>{item?.icon}</ListItemIcon>
+            <ListItemText
+              primary={item?.name}
+              sx={{
+                color: "black",
+              }}
+            />
+          </Link>
+        </ListItemButton>
+      );
+    })}
+    
+  </>
+  )
+} 
 export const mainListItems = (
   <React.Fragment>
     {pagesArray?.map((item, index) => {
@@ -84,55 +115,9 @@ export const mainListItems = (
         </ListItemButton>
       );
     })}
-    {/* <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItemButton> */}
+    
   </React.Fragment>
 );
 
-// export const secondaryListItems = (
-//   <React.Fragment>
-//     <ListSubheader component="div" inset>
-//       Saved reports
-//     </ListSubheader>
-//     <ListItemButton>
-//       <ListItemIcon>
-//         <AssignmentIcon />
-//       </ListItemIcon>
-//       <ListItemText primary="Current month" />
-//     </ListItemButton>
-//     <ListItemButton>
-//       <ListItemIcon>
-//         <AssignmentIcon />
-//       </ListItemIcon>
-//       <ListItemText primary="Last quarter" />
-//     </ListItemButton>
-//     <ListItemButton>
-//       <ListItemIcon>
-//         <AssignmentIcon />
-//       </ListItemIcon>
-//       <ListItemText primary="Year-end sale" />
-//     </ListItemButton>
-//   </React.Fragment>
-// );
+
+export default mainListItemsComponent;
