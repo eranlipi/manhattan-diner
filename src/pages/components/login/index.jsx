@@ -14,7 +14,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Link from "next/link";
 import loginImage from "../../../../public/login.jpg";
-
+import { useEffect } from 'react';
 import RMImage from "../recipe-manager-image/RMImage";
 import { useForm } from "react-hook-form";
 import { notifyError, notifySuccess } from "../../../utils/toast";
@@ -24,11 +24,40 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import axios from "axios";
-axios.defaults.xsrfHeaderName = "X-CSRF-TOKEN"; // Set header name if needed
+
 axios.defaults.withCredentials = true;
+
+// Axios Interceptor to add X-XSRF-TOKEN to each request header
+axios.interceptors.request.use(config => {
+  const token = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));
+  if (token) {
+    config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token.split('=')[1]);
+  }
+  return config;
+}, error => {
+  return Promise.reject(error);
+});
+
 const Login = () => {
   const [formData, setFormData] = useState({});
   const router = useRouter();
+
+  const getCsrfToken = async () => {
+    try {
+        const response = await axios.get('https://api.circlescrm.net/sanctum/csrf-cookie', { withCredentials: true });
+        console.log('CSRF token fetched successfully',response);
+        return response;
+    } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+    }
+}
+
+  // Fetch CSRF token on component mount
+useEffect(() => {
+    getCsrfToken().then(() => {
+        console.log('CSRF token has been fetched and should be set now.');
+    });
+}, []);
 
   const schema = yup.object().shape({
     email: yup
@@ -40,6 +69,7 @@ const Login = () => {
     password: yup.string().label("Password").required("Password is required"),
   });
 
+  
   const {
     handleSubmit,
     register,
@@ -49,39 +79,38 @@ const Login = () => {
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   const onSubmit = async (data, e) => {
+    e.preventDefault();
     if (e.key === "Enter") {
       setFormData(formData);
     }
 
+
     const data2 = {
       email: data?.email,
       password: data?.password,
+      email: 'johndon2@example.com',
+      password: 'securepassword',
     };
+  
     try {
+
+      // Proceed with login
       const response = await axios.post(
         "https://api.circlescrm.net/api/login",
-        data2,
-        {
-          withCredentials: true,
-          headers: {
-              'Access-Control-Allow-Origin': '*', 
-              'Content-Type': 'application/json'
-          }
-        }
-      
+        { email: data2.email, password: data2.password },
+        { withCredentials: true }
       );
+console.log('response',response);
       if (response?.data?.user) {
-        notifySuccess("Successfully LoggedIn");
-        setCookie(
-          "userInfo",
-          response?.data?.user
-        );
+        notifySuccess("Successfully Logged In");
+        setCookie("userInfo", JSON.stringify(response.data.user));
         router.push("/");
       } else if (response?.data?.errors) {
-        notifyError(response?.data?.message);
+        notifyError(response.data.message);
       }
     } catch (error) {
-      notifyError(error);
+      notifyError(error.toString());
+      console.error("Login error:", error);
     }
   };
 

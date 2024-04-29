@@ -1,0 +1,45 @@
+{
+  "header": {
+    "English": "English",
+    "Arabic": "Arabic",
+    "Dashboard":"Dashboard",
+    "Users": "Users",
+"Expenses": "Expenses",
+"Revenues": "Revenues",
+"Invoices": "Invoices",
+"Inventory": "Inventory",
+"Barcodes": "Barcodes",
+"Settings": "Settings",
+"A list of all users in your account including your email , role , title and name":"A list of all users in your account including your email , role , title and name",
+"Add users":"Add users",
+"Add expenses":"Add expenses",
+"Add Revenues":"Add Revenues",
+"Add Invoices":"Add Invoices",
+"Add Inventory":"Add Inventory",
+"List of Products":"List of Products",
+"Add Product":"Add Product",
+"subscribeToThisWebsite":"To subscribe to this website, please enter your email address here. We will send updates occasionally.",
+"Title":"Title",
+"Price":"Price",
+"Description":"Description",
+"Cancel":"Cancel",
+"Submit":"Submit",
+"Name":"Name",
+"Email":"Email",
+"Change Password":"Change Password",
+"EnterOldPassword" :"Enter your old, new password and Click Update to change your password",
+"Old Password":"Old Password",
+"New Password":"New Password",
+"Update Password":"Update Password",
+"Old Password Is required":"Old Password Is required",
+"New Password is required":"New Password is required",
+"Role": "Role",
+"Edit": "Edit",
+"ID":"ID",
+"Barcode":"Barcode"
+
+
+
+
+  }
+}
