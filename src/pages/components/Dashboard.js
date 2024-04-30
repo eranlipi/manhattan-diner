@@ -280,7 +280,11 @@ export default function Dashboard() {
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        <AppBar position="absolute" open={open} 
+        sx={{
+          right: router?.locale === "ar" ? "240px" : "0"
+        }}
+        >
           <Toolbar
             sx={{
               pr: "24px",
@@ -328,7 +332,16 @@ export default function Dashboard() {
             </Tooltip>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
+
+        
+        <Drawer variant="permanent" open={open}
+            sx={{
+              borderRight: router?.locale === "en" ? "1px solid #757575" :"0px solid ",
+              borderLeft: router?.locale === "ar" ? "1px solid #757575" :"0px solid "
+
+            }}
+        >
+ 
           <Toolbar
             sx={{
               display: "flex",
@@ -343,13 +356,14 @@ export default function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {/* {mainListItems} */}
-            {/* <mainListItemsComponent /> */}
-            {/* <Divider sx={{ my: 1 }} />
-            {secondaryListItems} */}
+            {
+              console.log("qqq" , router?.pathname)
+            }
+         
             {pagesArray?.map((item, index) => {
               return (
                 <ListItemButton key={item?.name + index}>
+                  {console.log("router?.pathname.includes(item?.name)" , router?.pathname.includes(item?.name.toLocaleLowerCase()))}
                   <Link
                     href={item.link}
                     style={{
@@ -358,11 +372,13 @@ export default function Dashboard() {
                       alignItems: "center",
                     }}
                   >
-                    <ListItemIcon>{item?.icon}</ListItemIcon>
+                    <ListItemIcon sx={{
+                      color: router?.pathname.includes(item?.name.toLocaleLowerCase()) ? "blue" : "black"
+                    }}>{item?.icon}</ListItemIcon>
                     <ListItemText
                       primary={t(item?.name)}
                       sx={{
-                        color: "black",
+                        color: router?.pathname.includes(item?.name.toLocaleLowerCase()) ?  "blue" : "black",
                       }}
                     />
                   </Link>
@@ -436,7 +452,7 @@ export default function Dashboard() {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Are You Sure you want to logout?"}
+            {t("Are You Sure you want to logout?")}
           </DialogTitle>
           {/* <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -445,9 +461,9 @@ export default function Dashboard() {
           </DialogContentText>
         </DialogContent> */}
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}>{t("Cancel")}</Button>
             <Button autoFocus variant="contained" onClick={deleteCookies}>
-              Logout
+              {t("Logout")}
             </Button>
           </DialogActions>
         </Dialog>
