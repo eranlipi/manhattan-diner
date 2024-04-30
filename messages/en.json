@@ -36,7 +36,9 @@
 "Role": "Role",
 "Edit": "Edit",
 "ID":"ID",
-"Barcode":"Barcode"
+"Barcode":"Barcode",
+"Are You Sure you want to logout?":"Are You Sure you want to logout?",
+"Logout":"Logout"
 
 
 
