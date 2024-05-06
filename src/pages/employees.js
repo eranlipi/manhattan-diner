@@ -9,7 +9,7 @@ const Invoices = () => {
 
     <Dashboard />
     <Box sx={{ width:"100%" , height:"100%" , margin:5 , marginTop:10}}>
-     <CommonHeader heading={"Invoices"} subHeading={"A list of all users in your account including your email , role , title and name"} buttonText ={"Add Invoices"} />
+     <CommonHeader heading={"Employees"} subHeading={"A list of all users in your account including your email , role , title and name"} buttonText ={"Add Employees"} />
      <CommonTable />
     </Box>
     </Box>

@@ -100,7 +100,6 @@ useEffect(() => {
         { email: data2.email, password: data2.password },
         { withCredentials: true }
       );
-console.log('response',response);
       if (response?.data?.user) {
         notifySuccess("Successfully Logged In");
         setCookie("userInfo", JSON.stringify(response.data.user));

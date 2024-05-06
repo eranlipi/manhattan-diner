@@ -38,7 +38,14 @@
 "ID":"ID",
 "Barcode":"Barcode",
 "Are You Sure you want to logout?":"Are You Sure you want to logout?",
-"Logout":"Logout"
+"Logout":"Logout",
+"Employees":"Employees",
+"Add Employees":"Add Employees",
+"Read Barcode":"Read Barcode",
+"Product Name":"Product Name",
+"In Stock":"In Stock",
+"Need to Order":"Need to Order",
+"Action":"Action"
 
 
 

@@ -73,25 +73,30 @@ const pagesArray = [
     link: "/expenses",
     icon: <PaymentIcon />,
   },
-  {
-    name: "Revenues",
-    link: "/revenues",
-    icon: <MonetizationOnIcon />,
-  },
-  {
-    name: "Invoices",
-    link: "/invoices",
-    icon: <ReceiptIcon />,
-  },
+  // {
+  //   name: "Revenues",
+  //   link: "/revenues",
+  //   icon: <MonetizationOnIcon />,
+  // },
+  // {
+  //   name: "Invoices",
+  //   link: "/invoices",
+  //   icon: <ReceiptIcon />,
+  // },
   {
     name: "Inventory",
     link: "/inventory",
     icon: <InventoryIcon />,
   },
+  // {
+  //   name: "Barcodes",
+  //   link: "/barcodes",
+  //   icon: <QrCode2Icon />,
+  // },
   {
-    name: "Barcodes",
-    link: "/barcodes",
-    icon: <QrCode2Icon />,
+    name: "Employees",
+    link: "/employees",
+    icon: <GroupIcon />,
   },
   {
     name: "Settings",
@@ -373,12 +378,12 @@ export default function Dashboard() {
                     }}
                   >
                     <ListItemIcon sx={{
-                      color: router?.pathname.includes(item?.name.toLocaleLowerCase()) ? "blue" : "black"
+                      color: router?.pathname.includes(item?.name.toLocaleLowerCase()) ? "#EF3D49" : "black"
                     }}>{item?.icon}</ListItemIcon>
                     <ListItemText
                       primary={t(item?.name)}
                       sx={{
-                        color: router?.pathname.includes(item?.name.toLocaleLowerCase()) ?  "blue" : "black",
+                        color: router?.pathname.includes(item?.name.toLocaleLowerCase()) ?  "#EF3D49" : "black",
                       }}
                     />
                   </Link>
