@@ -1,3 +1,7 @@
+header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionAbsolute.css-rd4kur-MuiPaper-root-MuiAppBar-root {
+  background-color: #ef3d49;
+}
+
 /* :root {
   --max-width: 1100px;
   --border-radius: 12px;
@@ -33,6 +37,8 @@
     #00000010,
     #00000080
   );
+
+  
 
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
