@@ -25,6 +25,7 @@ const Settings = () => {
   const userInfoString = getCookie("userInfo");
 
   const userInfo = userInfoString ? JSON.parse(userInfoString) : null;
+  console.log("userInfouserInfo" ,userInfo);
   const handleClose = () => {
     setOpen(false);
   };

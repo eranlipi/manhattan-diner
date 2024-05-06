@@ -38,7 +38,14 @@
 "ID":"بطاقة تعريف",
 "Barcode":"الباركود",
 "Are You Sure you want to logout?":"هل أنت متأكد أنك تريد تسجيل الخروج؟",
-"Logout":"تسجيل خروج"
+"Logout":"تسجيل خروج",
+"Employees":"موظفين",
+"Add Employees":"إضافة موظفين",
+"Read Barcode":"قراءة الباركود",
+"Product Name":"اسم المنتج",
+"In Stock":"في الأوراق المالية",
+"Need to Order":"بحاجة إلى الطلب",
+"Action":"فعل"
 
   }
 }

@@ -6,7 +6,7 @@ import CommonTable from "./components/commonHeaderInfo/commonTable/CommonTable";
 
 const Expenses = () => {
   return (
-    <Box sx={{display:"flex"}}>
+    <Box sx={{display:"flex" }}>
     <Dashboard />
     <Box sx={{ width:"100%" , height:"100%" ,margin:{xs: 0 , sm:5}  , marginTop:{xs:8}}}>
      <CommonHeader heading={"Expenses"} subHeading={"A list of all users in your account including your email , role , title and name"} buttonText ={"Add expenses"} />
