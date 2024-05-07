@@ -46,10 +46,18 @@
 "In Stock":"In Stock",
 "Need to Order":"Need to Order",
 "Action":"Action",
+"Status":"Status",
 "Quantity":"Quantity"
 
 
 
 
+  },
+  "CommonTable":{
+    "Status":"Status",
+    "Phone":"Phone",
+    "Salary":"Salary",
+    "Name":"Name",
+    "Role":"Role"
   }
 }

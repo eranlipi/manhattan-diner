@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
 import CommonHeader from "./components/commonHeaderInfo/commonHeader";
@@ -17,12 +17,17 @@ import { useTranslations } from "use-intl";
 import EditIcon from "@mui/icons-material/Edit";
 import { getCookie } from "cookies-next";
 import CommonModal from "./components/commonModalToAddData/commonModal";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { notifyError, notifySuccess } from "../utils/toast";
 
 
 const headings = ["Product Name", "In Stock", "Need to Order", "Price", "Barcode" , "Action"]
 
 const Inventory = () => {
   const [inventoriesList, setInventoriesList] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [productId, setProductId] = useState()
+
   const [editData, setEditData] = useState(null)
   const [open, setOpen] = useState(false)
   const t = useTranslations("header")
@@ -31,6 +36,23 @@ const Inventory = () => {
   const userInfoString = getCookie("userInfo");
 
   const userInfo = userInfoString ? JSON.parse(userInfoString) : null;
+
+  const deleteProduct = async()=>{
+    try {
+  
+      const response= await axios.delete( `${process.env.NEXT_PUBLIC_BASE_URL}api/product/${productId}`  );
+      console.log(response);
+      if(response?.status){
+        notifySuccess("Product Successfully Deleted")
+      }
+      
+    } catch (error) {
+      notifyError("Something Went Wrong")
+      
+    }
+    setOpenModal(false)
+
+  }
 
   const getInventoriesList = async()=>{
     let data = new FormData();
@@ -52,6 +74,10 @@ const Inventory = () => {
     getInventoriesList();
    
   }, [])
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
   
   return (
     <>
@@ -114,12 +140,19 @@ const Inventory = () => {
               <TableCell >{row?.maxquantity}</TableCell>
               <TableCell >{row?.price}</TableCell>
               <TableCell >{row?.barcode_image ? row?.barcode_image : "Null"}</TableCell>
-              <TableCell align="inherit">
+              <TableCell align="start">
                   <IconButton onClick={()=>{
                     setEditData(row);
                     setOpen(true)
                     }}>
-                    <EditIcon sx={{ color: "#3f51b5" }}  />
+                    <EditIcon sx={{ color: "#3f51b5" , marginRight:1 }} />
+                  </IconButton>
+
+                  <IconButton onClick={()=>{
+                   setOpenModal(true);
+                   setProductId(row?.id)
+                    }}>
+                    <DeleteIcon sx={{color: "#3f51b5" ,}} />
                   </IconButton>
                 </TableCell>
             </TableRow>
@@ -136,6 +169,31 @@ const Inventory = () => {
     editData={editData ?  editData : null} 
     setEditData={setEditData}   
     />
+
+<React.Fragment>
+        <Dialog
+          open={openModal}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Are You Sure you want to delete?"}
+          </DialogTitle>
+          {/* <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Let Google help apps determine location. This means sending anonymous
+            location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent> */}
+          <DialogActions>
+            <Button onClick={handleClose}>{t("Cancel")}</Button>
+            <Button autoFocus variant="contained" onClick={()=>deleteProduct()}>
+              {"Delete"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
 </>
   );
 };

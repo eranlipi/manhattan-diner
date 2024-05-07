@@ -89,8 +89,8 @@ const pagesArray = [
     icon: <InventoryIcon />,
   },
   // {
-  //   name: "Barcodes",
-  //   link: "/barcodes",
+  //   name: "tasks",
+  //   link: "/tasks",
   //   icon: <QrCode2Icon />,
   // },
   {
@@ -423,7 +423,7 @@ export default function Dashboard() {
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}
-                {/* <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={3}>
                   <Paper
                     sx={{
                       p: 2,
@@ -434,15 +434,15 @@ export default function Dashboard() {
                   >
                     <Deposits />
                   </Paper>
-                </Grid> */}
+                </Grid>
                 {/* Recent Orders */}
-                {/* <Grid item xs={12}>
+                <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     <Orders />
                   </Paper>
-                </Grid> */}
+                </Grid>
               </Grid>
               {/* <Copyright sx={{ pt: 4 }} /> */}
             </Container>

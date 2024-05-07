@@ -1,5 +1,7 @@
-import { Box } from "@mui/material";
+import { Box , Grid , Paper} from "@mui/material";
 import React from "react";
+// import Orders from "./Orders";
+import Deposits from "./components/Deposits";
 import Dashboard from "./components/Dashboard";
 import CommonHeader from "./components/commonHeaderInfo/commonHeader";
 import CommonTable from "./components/commonHeaderInfo/commonTable/CommonTable";
@@ -10,6 +12,13 @@ const Invoices = () => {
     <Dashboard />
     <Box sx={{ width:"100%" , height:"100%" , margin:5 , marginTop:10}}>
      <CommonHeader heading={"Employees"} subHeading={"A list of all users in your account including your email , role , title and name"} buttonText ={"Add Employees"} />
+     <Grid item xs={12}>
+                  <Paper
+                    sx={{ p: 2, display: "flex", flexDirection: "column" }}
+                  >
+                    <Deposits />
+                  </Paper>
+                </Grid>
      <CommonTable />
     </Box>
     </Box>
