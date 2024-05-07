@@ -13,7 +13,7 @@ import {
   FormControl,
   InputLabel,
   Select,
-  OutlinedInput
+  OutlinedInput,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
@@ -21,7 +21,6 @@ import CommonHeader from "./components/commonHeaderInfo/commonHeader";
 import CommonTable from "./components/commonHeaderInfo/commonTable/CommonTable";
 import { notifySuccess, notifyError } from "../utils/toast";
 import { Controller } from "react-hook-form";
-
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -40,6 +39,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useTranslations } from "next-intl";
 import ErrorMessage from "./components/errorMessage";
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 const headings = ["Name", "Role", "Status", "Phone", "Salary", "Action"];
 
 
@@ -62,6 +63,17 @@ const Invoices = () => {
 
   const [editData, setEditData] = useState(null);
   const [open, setOpen] = useState(false);
+  const [activeEmployeesNumber, setActiveEmployeesNumber] = useState()
+
+  useEffect(() => {
+    if(employeesList){
+      const array = employeesList?.filter((item) => item?.status === "active");
+      setActiveEmployeesNumber(array?.length)
+    }
+  
+
+  }, []);
+  
 
   const t = useTranslations("header");
 
@@ -82,7 +94,7 @@ const Invoices = () => {
     if (editData) {
       setValue("name", editData?.name);
       setValue("role", editData?.role);
-      setValue("status", editData?.status);
+      setValue("status", editData?.status === "active" ? "Active" : "Inactive");
       setValue("phone", editData?.phone);
       setValue("salary", editData?.salary);
     }
@@ -119,9 +131,7 @@ const Invoices = () => {
       setFormData(formData);
     }
     // debugger
-    const url = editData
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}api/product/${editData?.id}`
-      : `${process.env.NEXT_PUBLIC_BASE_URL}api/employees`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}api/employees`;
 
     const data2 = {
       name: data?.name,
@@ -129,14 +139,19 @@ const Invoices = () => {
       phone: data?.phone,
       salary: data?.salary,
       status: data?.status === "Active" ? "active" : "not",
-
     };
     try {
-      const response = await axios.post(url, data2);
+      const response = editData ? await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}api/employees/${editData?.id}` , data2) : await axios.post(url, data2);
       setOpen(false);
-      notifySuccess(
-        editData ? "Product Updated Successfully" : "Product Added Successfully"
-      );
+      
+      if(response.status){
+
+        notifySuccess(
+          editData ? "Product Updated Successfully" : "Product Added Successfully"
+        );
+    getEmployees();
+
+      }
       reset();
       setEditData(null);
 
@@ -149,17 +164,27 @@ const Invoices = () => {
   };
 
   useEffect(() => {
-    if(!open){
-      setEditData(null)
+    if (!open) {
+      setEditData(null);
     }
-  
- 
-  }, [editData])
-  
+  }, [editData]);
 
+const deleteEmployee = async ()=>{
+  try {
 
-  console.log("employeesList", getValues().role);
+    const response= await axios.delete( `${process.env.NEXT_PUBLIC_BASE_URL}api/employees/${emploeeId}`  );
+    if(response?.status){
+      notifySuccess("Employee Successfully Deleted")
+    getEmployees();
 
+    }
+    
+  } catch (error) {
+    notifyError("Something Went Wrong")
+    
+  }
+  setOpenModal(false)
+}
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -196,6 +221,17 @@ const Invoices = () => {
               </Grid>
             </Grid>
           </Box>
+          <Box mb={2}>
+            <Paper elevation={2} sx={{
+              padding:3,
+              width:"25%",
+              textAlign:"center"
+            }}>
+              <Typography variant="h6">Active Employees</Typography>
+              <Typography variant="h6">{activeEmployeesNumber}</Typography>
+
+            </Paper>
+          </Box>
 
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -218,7 +254,19 @@ const Invoices = () => {
                       {row?.name}
                     </TableCell>
                     <TableCell>{row?.role}</TableCell>
-                    <TableCell>{row?.status}</TableCell>
+                    <TableCell>
+                      {
+                        row.status === "active" ? (
+                          <ToggleOnIcon sx={{
+                            color:"green"
+                          }} />
+                        ) : (
+                          <ToggleOffIcon sx={{
+                            color:"black"
+                          }} />
+                        )
+                      }
+                    </TableCell>
                     <TableCell>{row?.phone}</TableCell>
                     <TableCell>{row?.salary}</TableCell>
                     <TableCell align="start">
@@ -262,7 +310,7 @@ const Invoices = () => {
 
           <DialogActions>
             <Button onClick={handleCloseConfirmModal}>{t("Cancel")}</Button>
-            <Button autoFocus variant="contained">
+            <Button autoFocus variant="contained" onClick={deleteEmployee}>
               {"Delete"}
             </Button>
           </DialogActions>
@@ -322,33 +370,32 @@ const Invoices = () => {
             />
             {errors?.role && <ErrorMessage message={errors?.role?.message} />}
             <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      labelId="demo-multiple-name-label"
-                      // multiple
-                      value={getValues().status}
-                      onChange={(e) => {
-                        // handleChangeCategories(e);
-                        field.onChange(e);
-                setValue("status", e.target.value);
-                        
-                      }}
-                      onLoad={(e) => {}}
-                      input={<OutlinedInput label="Status" />}
-                      MenuProps={MenuProps}
-                      fullWidth
-                    >
-                      {["Active", "Inactive"].map((item) => (
-                        <MenuItem key={item} value={item}>
-                          {item}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  )}
-                />
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  labelId="demo-multiple-name-label"
+                  // multiple
+                  value={getValues().status}
+                  onChange={(e) => {
+                    // handleChangeCategories(e);
+                    field.onChange(e);
+                    setValue("status", e.target.value);
+                  }}
+                  onLoad={(e) => {}}
+                  input={<OutlinedInput label="Status" sx={{textAlign:"initial"}} />}
+                  MenuProps={MenuProps}
+                  fullWidth
+                >
+                  {["Active", "Inactive"].map((item) => (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
             {/* <TextField
             {...register("status")}
         
