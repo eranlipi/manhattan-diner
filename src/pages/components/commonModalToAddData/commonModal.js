@@ -1,17 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Dialog, DialogContent, DialogContentText, DialogTitle, TextField, Typography , Button} from '@mui/material';
+import axios from 'axios';
 import { useTranslations } from 'next-intl';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { validationSchema } from '../../../utils/validations';
 import ErrorMessage from '../errorMessage';
+import { notifyError, notifySuccess } from "../../../utils/toast";
 
-const CommonModal = ({open , setOpen , commonModalHeading}) => {
+
+const CommonModal = ({open , setOpen , commonModalHeading , getInventoriesList , editData , setEditData}) => {
     const t = useTranslations("header")
 
-    const handleClose = () => {
-        setOpen(false);
-      };
+    console.log("editData222" , editData);
+
+ 
 
       const {
         handleSubmit,
@@ -19,18 +22,63 @@ const CommonModal = ({open , setOpen , commonModalHeading}) => {
         setValue,
         formState: { errors },
         getValues,
-      } = useForm({ mode: "onChange", resolver: yupResolver(validationSchema) });
+        reset,
+      } = useForm({
+        mode: "onChange",
+        resolver: yupResolver(validationSchema)
+        
+      });
+
+      useEffect(() => {
+        if(editData){
+          
+          
+          setValue("name" , editData?.name);
+          setValue("price" , editData?.price);
+          setValue("quantity" , editData?.quantity);
+          setValue("max" , editData?.maxquantity);
+
+        }
+      
+      
+      }, [editData])
+
+      const handleClose = () => {
+        setOpen(false);
+        setEditData(null);
+        reset()
+      };
+      
+      
 
       const onSubmit = async (data, e) => {
         if (e.key === "Enter") {
           setFormData(formData);
         }
+        const url = editData ? `${process.env.NEXT_PUBLIC_BASE_URL}api/product/${editData?.id}` : `${process.env.NEXT_PUBLIC_BASE_URL}api/product` 
     
-        // const data2 = {
-        //   oldPassword: data?.oldPassword,
-        //   newPassword: data?.newPassword,
-        // };
-        console.log("data2", data);
+        const data2 = {
+          name: data?.name,
+          price:data?.price,
+          quantity: data?.quantity,
+          maxquantity:data?.max
+        };
+       try {
+        const response = await axios.post(url, data2);
+        setOpen(false);
+        notifySuccess(editData ? "Product Updated Successfully" : "Product Added Successfully");
+        reset();
+        setEditData(null)
+
+        getInventoriesList();
+
+        
+        
+        
+       } catch (error) {
+        console.log("error");
+        notifyError(error)
+       }
         return
       };
 
@@ -40,7 +88,7 @@ const CommonModal = ({open , setOpen , commonModalHeading}) => {
     onClose={handleClose}
   
   >
-    <DialogTitle>{t(commonModalHeading)}</DialogTitle>
+    <DialogTitle>{editData ? "Update Product" : "Add Product"}</DialogTitle>
 
     <form onSubmit={handleSubmit(onSubmit)} style={{textAlign:"-webkit-center"}}>
       <DialogContent
@@ -58,7 +106,6 @@ const CommonModal = ({open , setOpen , commonModalHeading}) => {
         <Box sx={{  width:"90%"}}>
           <TextField
             {...register("name")}
-          
             name="name"
             id="name"
             // type="password"
@@ -70,7 +117,8 @@ const CommonModal = ({open , setOpen , commonModalHeading}) => {
             }}
             // autoComplete="current-password"
             onChangeCapture={(e) => {
-              setValue("name", e.currentTarget.value);
+               
+              setValue("name", e.target.value);
 
               
             }}
@@ -83,67 +131,67 @@ const CommonModal = ({open , setOpen , commonModalHeading}) => {
           )}
 
           <TextField
-            {...register("title")}
+            {...register("quantity")}
         
-            name="title"
-            id="title"
-            // type="password"
+            name="quantity"
+            id="quantity"
+            type="number"
             margin="normal"
             fullWidth
-            label={t("Title")}
+            label={t("Quantity")}
             // autoComplete="current-password"
             onChangeCapture={(e) => {
-              setValue("title", e.currentTarget.value);
+              setValue("quantity", e.target.value);
 
               
             }}
           />
-          {errors?.title && (
+          {errors?.quantity && (
               <ErrorMessage
-              message={errors?.title?.message}
+              message={errors?.quantity?.message}
               />
           )}
            <TextField
-            {...register("email")}
+            {...register("price")}
         
-            name="email"
-            id="email"
-            // type="password"
+            name="price"
+            id="price"
+            type="number"
             margin="normal"
             fullWidth
-            label={t("Email")}
+            label={t("Price")}
             // autoComplete="current-password"
             onChangeCapture={(e) => {
-              setValue("email", e.currentTarget.value);
+              setValue("price", e.target.value);
 
               
             }}
           />
-          {errors?.email && (
+          {errors?.price && (
               <ErrorMessage
-              message={errors?.email?.message}
+              message={errors?.price?.message}
               />
           )}
 
 <TextField
-            {...register("role")}
+            {...register("max")}
         
-            name="role"
-            id="role"
-            // type="password"
+            name="max"
+            id="max"
+            type="number"
             margin="normal"
             fullWidth
-            label={t("Role")}
+            label={t("Need to Order")}
             // autoComplete="current-password"
             onChangeCapture={(e) => {
-              setValue("role", e.currentTarget.value);
+              setValue("max", e.target.value);
 
               
             }}
           />
-          {errors?.role && (
+          {errors?.max && (
               <ErrorMessage
-              message={errors?.role?.message}
+              message={errors?.max?.message}
               />
           )}
 
