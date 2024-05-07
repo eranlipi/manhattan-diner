@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Dialog, DialogActions, DialogTitle, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
 import CommonHeader from "./components/commonHeaderInfo/commonHeader";
@@ -39,9 +39,8 @@ const Inventory = () => {
 
   const deleteProduct = async()=>{
     try {
-  
+
       const response= await axios.delete( `${process.env.NEXT_PUBLIC_BASE_URL}api/product/${productId}`  );
-      console.log(response);
       if(response?.status){
         notifySuccess("Product Successfully Deleted")
       }
