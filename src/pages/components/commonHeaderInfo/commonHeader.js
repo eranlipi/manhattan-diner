@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import CommonModal from "../commonModalToAddData/commonModal";
 
-const CommonHeader = ({ heading, buttonText, subHeading , secondButtonText }) => {
+     const CommonHeader = ({ heading, buttonText, subHeading , secondButtonText , editData}) => {
   const t = useTranslations("header");
   const [open, setOpen] = useState(false);
   return (
@@ -22,23 +22,23 @@ const CommonHeader = ({ heading, buttonText, subHeading , secondButtonText }) =>
           justifyContent:"space-around"
         }}>
           <Button variant="contained" size="large" onClick={()=>setOpen(true)}>{t(buttonText)}</Button>
-          {
+          {/* {
             secondButtonText && (
 
               <Button variant="contained" size="large" >{t(secondButtonText)}</Button>
             )
             
-          }
+          } */}
 
         </Grid>
       </Grid>
     </Box>
-    <CommonModal
+    {/* <CommonModal
     open={open}
     setOpen={setOpen}
     commonModalHeading={buttonText}
-    
-    />
+    editData={editData ?  editData : null}
+    /> */}
     </>
   );
 };

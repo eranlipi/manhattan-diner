@@ -45,7 +45,8 @@
 "Product Name":"اسم المنتج",
 "In Stock":"في الأوراق المالية",
 "Need to Order":"بحاجة إلى الطلب",
-"Action":"فعل"
+"Action":"فعل",
+"Quantity":"كمية"
 
   }
 }
