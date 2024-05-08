@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, Dialog, DialogActions, DialogTitle, Grid, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
 import CommonHeader from "./components/commonHeaderInfo/commonHeader";
@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { notifyError, notifySuccess } from "../utils/toast";
 
 
-const headings = ["Product Name", "In Stock", "Need to Order", "Price", "Barcode" , "Action"]
+const headings = ["Product Name", "In Stock", "max stock", "Price", "Barcode" , "Action"]
 
 const Inventory = () => {
   const [inventoriesList, setInventoriesList] = useState([]);

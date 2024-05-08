@@ -52,7 +52,7 @@ import { useTranslations } from "next-intl";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
 import PaymentIcon from "@mui/icons-material/Payment";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import TaskIcon from '@mui/icons-material/Task';
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
@@ -73,11 +73,11 @@ const pagesArray = [
     link: "/expenses",
     icon: <PaymentIcon />,
   },
-  // {
-  //   name: "Revenues",
-  //   link: "/revenues",
-  //   icon: <MonetizationOnIcon />,
-  // },
+  {
+    name: "task",
+    link: "/task",
+    icon: <TaskIcon />,
+  },
   // {
   //   name: "Invoices",
   //   link: "/invoices",
