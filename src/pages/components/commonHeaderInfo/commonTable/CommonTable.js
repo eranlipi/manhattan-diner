@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   styled,
@@ -10,64 +10,43 @@ import {
   TableRow,
   IconButton,
   Typography,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import { useTranslations } from "next-intl";
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { useTranslations } from 'next-intl';
 
-//styles
-
+// Styles
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontSize: 14,
-  fontWeight: (props) => (props.isHeader ? "bold" : "normal"), // Bold for headers
-
-  [theme.breakpoints.down("sm")]: {
+  fontWeight: (props) => (props.isHeader ? 'bold' : 'normal'), // Bold for headers
+  [theme.breakpoints.down('sm')]: {
     fontSize: 12,
   },
 }));
 
-const CommonTable = ({ headings, tableData }) => {
-  const t = useTranslations("header")
-  // dummy data
-  const rows = [
-    {
-      name: "Lindsay Walton",
-      title: "Front-end Developer",
-      email: "lindsay.walton@example.com",
-      role: "Member",
-    },
-    {
-      name: "Courtney Henry",
-      title: "Designer",
-      email: "courtney.henry@example.com",
-      role: "Admin",
-    },
-    {
-      name: "Tom Cook",
-      title: "Director of Product",
-      email: "tom.cook@example.com",
-      role: "Member",
-    },
-    {
-      name: "Whitney Francis",
-      title: "Copywriter",
-      email: "whitney.francis@example.com",
-      role: "Admin",
-    },
-    {
-      name: "Leonard Krasner",
-      title: "Senior Designer",
-      email: "leonard.krasner@example.com",
-      role: "Owner",
-    },
-  ];
-  const tableDataToIterate = tableData ? tableData : rows;
+const CommonTable = ({ headings }) => {
+  const [tableData, setTableData] = useState([]);
+  const t = useTranslations('CommonTable');
 
-  const headingsToIterate = headings
-    ? headings
-    : ["Name", "Title", "Email", "Role", "Edit"];
+  useEffect(() => {
+    fetch('https://api.circlescrm.net/api/employees')
+      .then(response => response.json())
+      .then(data => {
+        const mappedData = data.map(emp => ({
+          name: emp.name,
+          phone: emp.phone,
+          status: emp.status,
+          role: emp.role,
+          salary: emp.salary
+        }));
+        setTableData(mappedData);
+      })
+      .catch(error => console.error('Failed to fetch data:', error));
+  }, []);
+
+  const headingsToIterate = headings || ['Name', 'Phone', 'Status', 'Role', 'Salary'];
 
   return (
-    <TableContainer component={Box} mt={5} >
+    <TableContainer component={Box} mt={5}>
       <Table>
         <TableHead>
           <TableRow>
@@ -75,31 +54,21 @@ const CommonTable = ({ headings, tableData }) => {
               <StyledTableCell
                 key={header}
                 isHeader={true}
-                sx={{ fontWeight: "bold" }}
+                sx={{ fontWeight: 'bold' }}
               >
                 {t(header)}
               </StyledTableCell>
             ))}
           </TableRow>
         </TableHead>
-        <TableBody >
-          {tableDataToIterate.map((row, index) => (
-            <TableRow key={row.name}>
-              {Object.keys(row).map((key) => (
-                <StyledTableCell
-                  key={key}
-                  sx={{ fontWeight: key === "name" || key === "id" ? "bold" : "" }}
-                >
-                  {row[key]}
+        <TableBody>
+          {tableData.map((row, index) => (
+            <TableRow key={index}>
+              {headingsToIterate.map((header) => (
+                <StyledTableCell key={header}>
+                  {row[header.toLowerCase()]}
                 </StyledTableCell>
               ))}
-              {!tableData && (
-                <TableCell align="inherit">
-                  <IconButton>
-                    <EditIcon sx={{ color: "#3f51b5" }} />
-                  </IconButton>
-                </TableCell>
-              )}
             </TableRow>
           ))}
         </TableBody>

@@ -52,7 +52,7 @@ import { useTranslations } from "next-intl";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
 import PaymentIcon from "@mui/icons-material/Payment";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import TaskIcon from '@mui/icons-material/Task';
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
@@ -73,11 +73,11 @@ const pagesArray = [
     link: "/expenses",
     icon: <PaymentIcon />,
   },
-  // {
-  //   name: "Revenues",
-  //   link: "/revenues",
-  //   icon: <MonetizationOnIcon />,
-  // },
+  {
+    name: "task",
+    link: "/task",
+    icon: <TaskIcon />,
+  },
   // {
   //   name: "Invoices",
   //   link: "/invoices",
@@ -89,8 +89,8 @@ const pagesArray = [
     icon: <InventoryIcon />,
   },
   // {
-  //   name: "Barcodes",
-  //   link: "/barcodes",
+  //   name: "tasks",
+  //   link: "/tasks",
   //   icon: <QrCode2Icon />,
   // },
   {
@@ -423,7 +423,7 @@ export default function Dashboard() {
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}
-                {/* <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={3}>
                   <Paper
                     sx={{
                       p: 2,
@@ -434,15 +434,15 @@ export default function Dashboard() {
                   >
                     <Deposits />
                   </Paper>
-                </Grid> */}
+                </Grid>
                 {/* Recent Orders */}
-                {/* <Grid item xs={12}>
+                <Grid item xs={12}>
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
                     <Orders />
                   </Paper>
-                </Grid> */}
+                </Grid>
               </Grid>
               {/* <Copyright sx={{ pt: 4 }} /> */}
             </Container>

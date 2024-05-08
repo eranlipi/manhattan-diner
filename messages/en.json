@@ -10,6 +10,9 @@
 "Inventory": "Inventory",
 "Barcodes": "Barcodes",
 "Settings": "Settings",
+  "task":"task",
+  "Task":"Task",
+  "Add task":"Add task",
 "A list of all users in your account including your email , role , title and name":"A list of all users in your account including your email , role , title and name",
 "Add users":"Add users",
 "Add expenses":"Add expenses",
@@ -44,12 +47,20 @@
 "Read Barcode":"Read Barcode",
 "Product Name":"Product Name",
 "In Stock":"In Stock",
-"Need to Order":"Need to Order",
+"max stock":"max stock",
 "Action":"Action",
+"Status":"Status",
 "Quantity":"Quantity"
 
 
 
 
+  },
+  "CommonTable":{
+    "Status":"Status",
+    "Phone":"Phone",
+    "Salary":"Salary",
+    "Name":"Name",
+    "Role":"Role"
   }
 }

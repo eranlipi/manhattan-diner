@@ -16,8 +16,8 @@ export const validationSchema = yup.object().shape({
       ,
     max: yup
       .string()
-      .label("Need to Order")
-      .required("Need to Order is required"),
+      .label("max stock")
+      .required("max stock is required"),
   });
 
 

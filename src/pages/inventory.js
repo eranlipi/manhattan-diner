@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { notifyError, notifySuccess } from "../utils/toast";
 
 
-const headings = ["Product Name", "In Stock", "Need to Order", "Price", "Barcode" , "Action"]
+const headings = ["Product Name", "In Stock", "max stock", "Price", "Barcode" , "Action"]
 
 const Inventory = () => {
   const [inventoriesList, setInventoriesList] = useState([]);

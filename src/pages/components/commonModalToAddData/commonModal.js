@@ -181,7 +181,7 @@ const CommonModal = ({open , setOpen , commonModalHeading , getInventoriesList ,
             type="number"
             margin="normal"
             fullWidth
-            label={t("Need to Order")}
+            label={t("max stock")}
             // autoComplete="current-password"
             onChangeCapture={(e) => {
               setValue("max", e.target.value);
