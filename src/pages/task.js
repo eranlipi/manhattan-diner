@@ -27,6 +27,7 @@ const Task = () => {
     name: '',
     description: '',
     status: '',
+    type:'',
     user_id: '',
     due_date: ''
   });
@@ -53,6 +54,7 @@ const Task = () => {
         name: task.name,
         description: task.description,
         status: task.status,
+        type: task.type,
         user_id: task.user_id,
         due_date: task.due_date
       });
@@ -170,6 +172,19 @@ const Task = () => {
             >
               {['todo', 'doing', 'done'].map((status) => (
                 <MenuItem key={status} value={status}>{status}</MenuItem>
+              ))}
+            </Select>
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+            <InputLabel>type</InputLabel>
+            <Select
+              label="type"
+              name="type"
+              value={formData.type}
+              onChange={handleInputChange}
+            >
+              {['overall', 'payment', 'product'].map((type) => (
+                <MenuItem key={type} value={type}>{type}</MenuItem>
               ))}
             </Select>
           </FormControl>
