@@ -26,6 +26,7 @@ import mainListItemsComponent from "./listItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
+import TaskSummary from "./TaskSummary";
 import { useRouter } from "next/router";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {
@@ -410,7 +411,7 @@ export default function Dashboard() {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* Chart */}
-                <Grid item xs={12} md={8} lg={9}>
+                {/* <Grid item xs={12} md={8} lg={9}>
                   <Paper
                     sx={{
                       p: 2,
@@ -421,7 +422,12 @@ export default function Dashboard() {
                   >
                     <Chart />
                   </Paper>
-                </Grid>
+                </Grid> */}
+
+            <Grid item xs={12} md={8} lg={9}>
+                <TaskSummary />
+              </Grid>
+                
                 {/* Recent Deposits */}
                 <Grid item xs={12} md={4} lg={3}>
                   <Paper
