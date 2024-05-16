@@ -39,10 +39,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useTranslations } from "next-intl";
 import ErrorMessage from "./components/errorMessage";
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
-const headings = ["Name", "Role", "Status", "Phone", "Salary", "Action"];
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
+import LineChart from "./components/lineChart/lineChart";
+const headings = ["Name", "Role", "Status", "Phone", "Salary", "Action"];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -63,17 +64,27 @@ const Invoices = () => {
 
   const [editData, setEditData] = useState(null);
   const [open, setOpen] = useState(false);
-  const [activeEmployeesNumber, setActiveEmployeesNumber] = useState()
+  const [activeEmployeesNumber, setActiveEmployeesNumber] = useState();
+  const [userRoles, setUserRoles] = useState();
+  const [activeUserRoles, setActiveUserRoles] = useState();
 
   useEffect(() => {
-    if(employeesList){
+    if (employeesList) {
       const array = employeesList?.filter((item) => item?.status === "active");
-      setActiveEmployeesNumber(array?.length)
-    }
-  
+      setActiveEmployeesNumber(array?.length);
 
-  }, []);
-  
+      const uniqueRoles = [...new Set(employeesList.map((obj) => obj.role))];
+      const roleCounts = uniqueRoles.map(
+        (role) =>
+          employeesList.filter(
+            (obj) => obj.role === role && obj.status === "active"
+          ).length
+      );
+
+      setUserRoles(uniqueRoles);
+      setActiveUserRoles(roleCounts);
+    }
+  }, [employeesList]);
 
   const t = useTranslations("header");
 
@@ -141,16 +152,21 @@ const Invoices = () => {
       status: data?.status === "Active" ? "active" : "not",
     };
     try {
-      const response = editData ? await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}api/employees/${editData?.id}` , data2) : await axios.post(url, data2);
+      const response = editData
+        ? await axios.put(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/employees/${editData?.id}`,
+            data2
+          )
+        : await axios.post(url, data2);
       setOpen(false);
-      
-      if(response.status){
 
+      if (response.status) {
         notifySuccess(
-          editData ? "Product Updated Successfully" : "Product Added Successfully"
+          editData
+            ? "Product Updated Successfully"
+            : "Product Added Successfully"
         );
-    getEmployees();
-
+        getEmployees();
       }
       reset();
       setEditData(null);
@@ -169,22 +185,20 @@ const Invoices = () => {
     }
   }, [editData]);
 
-const deleteEmployee = async ()=>{
-  try {
-
-    const response= await axios.delete( `${process.env.NEXT_PUBLIC_BASE_URL}api/employees/${emploeeId}`  );
-    if(response?.status){
-      notifySuccess("Employee Successfully Deleted")
-    getEmployees();
-
+  const deleteEmployee = async () => {
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/employees/${emploeeId}`
+      );
+      if (response?.status) {
+        notifySuccess("Employee Successfully Deleted");
+        getEmployees();
+      }
+    } catch (error) {
+      notifyError("Something Went Wrong");
     }
-    
-  } catch (error) {
-    notifyError("Something Went Wrong")
-    
-  }
-  setOpenModal(false)
-}
+    setOpenModal(false);
+  };
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -195,22 +209,50 @@ const deleteEmployee = async ()=>{
               container
               sx={{ justifyContent: "center", alignItems: "center" }}
             >
-              <Grid item xs={12} sm={6}>
-                <Typography variant="h5">{"Employees"}</Typography>
+              <Grid item xs={12} sm={3}>
+                <Paper
+                  elevation={2}
+                  sx={{
+                    padding: 3,
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography variant="h6">Active Employees</Typography>
+                  <Typography variant="h6">{activeEmployeesNumber}</Typography>
+                </Paper>
               </Grid>
               <Grid
                 item
                 xs={12}
-                sm={6}
+                sm={9}
                 textAlign="end"
                 sx={{
                   display: "flex",
-                  justifyContent: "space-around",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
+                <Box
+                  sx={{
+                    width: { xs: "200px", sm: "300px", md: "700px" },
+
+                    height: { xs: "100px", sm: "150px", md: "200px" },
+                    textAlign: "-webkit-right",
+                  }}
+                >
+                  <LineChart
+                    userRoles={userRoles}
+                    activeUserRoles={activeUserRoles}
+                  />
+                </Box>
                 <Button
                   variant="contained"
                   size="large"
+                  sx={{
+                    height: "60px",
+                    width: "30%",
+                  }}
                   onClick={() => {
                     setEditData(null);
                     setOpen(true);
@@ -221,19 +263,24 @@ const deleteEmployee = async ()=>{
               </Grid>
             </Grid>
           </Box>
-          <Box mb={2}>
-            <Paper elevation={2} sx={{
-              padding:3,
-              width:"25%",
-              textAlign:"center"
-            }}>
-              <Typography variant="h6">Active Employees</Typography>
-              <Typography variant="h6">{activeEmployeesNumber}</Typography>
+          {/* <Box mb={2}>
+            <Box
+              sx={{
+                width: { xs: "200px", sm: "300px", md: "100%" },
 
-            </Paper>
-          </Box>
+                height: { xs: "100px", sm: "150px", md: "200px" },
+              }}
+            >
+              <LineChart />
+            </Box>
+          </Box> */}
 
-          <TableContainer component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              mt: 5,
+            }}
+          >
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -255,17 +302,19 @@ const deleteEmployee = async ()=>{
                     </TableCell>
                     <TableCell>{row?.role}</TableCell>
                     <TableCell>
-                      {
-                        row.status === "active" ? (
-                          <ToggleOnIcon sx={{
-                            color:"green"
-                          }} />
-                        ) : (
-                          <ToggleOffIcon sx={{
-                            color:"black"
-                          }} />
-                        )
-                      }
+                      {row.status === "active" ? (
+                        <ToggleOnIcon
+                          sx={{
+                            color: "green",
+                          }}
+                        />
+                      ) : (
+                        <ToggleOffIcon
+                          sx={{
+                            color: "black",
+                          }}
+                        />
+                      )}
                     </TableCell>
                     <TableCell>{row?.phone}</TableCell>
                     <TableCell>{row?.salary}</TableCell>
@@ -297,6 +346,7 @@ const deleteEmployee = async ()=>{
      <CommonTable /> */}
         </Box>
       </Box>
+
       <React.Fragment>
         <Dialog
           open={openModal}
@@ -345,55 +395,99 @@ const deleteEmployee = async ()=>{
               margin="normal"
               fullWidth
               label={t("Name")}
-              sx={{
-                mt: 0,
-              }}
               // autoComplete="current-password"
               onChangeCapture={(e) => {
                 setValue("name", e.target.value);
               }}
+              sx={{
+                mt: 0,
+              }}
             />
             {errors?.name && <ErrorMessage message={errors?.name?.message} />}
-
-            <TextField
-              {...register("role")}
+            <Controller
               name="role"
-              id="role"
-              // type="number"
-              margin="normal"
-              fullWidth
-              label={t("Role")}
-              // autoComplete="current-password"
-              onChangeCapture={(e) => {
-                setValue("role", e.target.value);
-              }}
+              control={control}
+              render={({ field }) => (
+                <>
+                  <InputLabel
+                    sx={{
+                      textAlign: "start",
+                    }}
+                    htmlFor="role-label"
+                  >
+                    Role
+                  </InputLabel>
+
+                  <Select
+                    {...field}
+                    labelId="role-label"
+                    label="Role"
+                    value={getValues().role}
+                    onChange={(e) => {
+                      // handleChangeCategories(e);
+                      field.onChange(e);
+                      setValue("role", e.target.value);
+                    }}
+                    onLoad={(e) => {}}
+                    input={
+                      <OutlinedInput label="Role" sx={{ textAlign: "start" }} />
+                    }
+                    MenuProps={MenuProps}
+                    fullWidth
+                    sx={{ mb: 1, textAlign: "start" }}
+                    textAlign={"start"}
+                  >
+                    {["Admin", "Manager", "IT", "Regular user"].map((item) => (
+                      <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </>
+              )}
             />
             {errors?.role && <ErrorMessage message={errors?.role?.message} />}
             <Controller
               name="status"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="demo-multiple-name-label"
-                  // multiple
-                  value={getValues().status}
-                  onChange={(e) => {
-                    // handleChangeCategories(e);
-                    field.onChange(e);
-                    setValue("status", e.target.value);
-                  }}
-                  onLoad={(e) => {}}
-                  input={<OutlinedInput label="Status" sx={{textAlign:"initial"}} />}
-                  MenuProps={MenuProps}
-                  fullWidth
-                >
-                  {["Active", "Inactive"].map((item) => (
-                    <MenuItem key={item} value={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <>
+                  <InputLabel
+                    sx={{
+                      textAlign: "start",
+                    }}
+                    htmlFor="status-label"
+                  >
+                    Status
+                  </InputLabel>
+                  <Select
+                    {...field}
+                    label="Status"
+                    labelId="status-label"
+                    // multiple
+                    value={getValues().status}
+                    onChange={(e) => {
+                      // handleChangeCategories(e);
+                      field.onChange(e);
+                      setValue("status", e.target.value);
+                    }}
+                    onLoad={(e) => {}}
+                    input={
+                      <OutlinedInput
+                        label="Status"
+                        sx={{ textAlign: "initial" }}
+                      />
+                    }
+                    MenuProps={MenuProps}
+                    fullWidth
+                  >
+                    {["Active", "Inactive"].map((item) => (
+                      <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </>
               )}
             />
             {/* <TextField
