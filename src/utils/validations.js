@@ -14,3 +14,15 @@ export const employeeValidationSchema = yup.object().shape({
   phone: yup.string().label("Phone").required("Phone is required"),
   salary: yup.string().label("Salary").required("Salary is required"),
 });
+
+export const taskValidationSchema = yup.object().shape({
+  name: yup.string().label("Name").required("Name is required"),
+  description: yup
+    .string()
+    .label("Description")
+    .required("Description is required"),
+  status: yup.string().label("Status").required("Status is required"),
+  type: yup.string().label("Type").required("Type is required"),
+  user_id: yup.string().label("User").required("User is required"),
+  due_date: yup.string().required("Date is required"),
+});
