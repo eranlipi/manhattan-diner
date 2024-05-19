@@ -238,24 +238,27 @@ const Task = () => {
       <Box
         sx={{
           flexGrow: 1,
-          p: 3,
-          marginTop: 10,
-          margin: 5,
+          p: { xs: 1, sm: 3 },
+          margin: { xs: 0, sm: 5 },
           width: "100%",
           height: "100%",
         }}
       >
-        <Box mt={5} mb={5} sx={{}}>
+        <Box mt={10} mb={5} sx={{}}>
           <Grid
             container
-            sx={{ justifyContent: "center", alignItems: "center" }}
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              // flexDirection: { xs: "column", sm: "row" },
+            }}
           >
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
               <Typography variant="h5">Tasks</Typography>
             </Grid>
             <Grid
               item
-              xs={12}
+              xs={6}
               sm={6}
               textAlign="end"
               sx={{
@@ -295,7 +298,7 @@ const Task = () => {
               {categorizeTasks(status).map((task) => (
                 <Card key={task.id} sx={{ marginBottom: 2, height: "130px" }}>
                   <CardContent>
-                    <Box sx={{ height: "80px" }}>
+                    <Box sx={{ height: { xs: "90px", sm: "80px" } }}>
                       <Typography variant="h5" component="div">
                         {task.name}
                       </Typography>
@@ -354,9 +357,9 @@ const Task = () => {
         <Box
           sx={{
             backgroundColor: "white",
-            width: "50%",
+            width: { xs: "95%", sm: "50%" },
             p: 1,
-            height: "60%",
+            height: { xs: "70%", sm: "60%" },
             borderRadius: "10px",
             overflowY: "auto",
           }}
